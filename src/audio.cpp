@@ -399,8 +399,8 @@ namespace audio {
     // DRED (Deep REDundancy): ML-based redundancy for graceful packet loss recovery
     // Works with CELT mode (RESTRICTED_LOWDELAY). Embeds redundancy in each packet
     // allowing the decoder to recover up to 100ms of lost audio from subsequent packets.
-    opus_multistream_encoder_ctl(opus.get(), OPUS_SET_DRED_DURATION(100));
-    BOOST_LOG(info) << "Opus DRED enabled: 100ms redundancy"sv;
+    // opus_multistream_encoder_ctl(opus.get(), OPUS_SET_DRED_DURATION(100));
+    // BOOST_LOG(info) << "Opus DRED enabled: 100ms redundancy"sv;
 #endif
 
     BOOST_LOG(info) << "Opus initialized: "sv << stream.sampleRate / 1000 << " kHz, "sv
