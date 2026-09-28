@@ -400,7 +400,7 @@ namespace audio {
     // Works with CELT mode (RESTRICTED_LOWDELAY). Embeds redundancy in each packet
     // allowing the decoder to recover up to 100ms of lost audio from subsequent packets.
     // opus_multistream_encoder_ctl(opus.get(), OPUS_SET_DRED_DURATION(100));
-    // BOOST_LOG(info) << "Opus DRED enabled: 100ms redundancy"sv;
+    BOOST_LOG(info) << "Opus DRED disabled (Xbox UWP compatibility)"sv;
 #endif
 
     BOOST_LOG(info) << "Opus initialized: "sv << stream.sampleRate / 1000 << " kHz, "sv
@@ -629,17 +629,17 @@ namespace audio {
       case 2:
         return STEREO + shift;
       case 6:
-        return SURROUND51 + shift;
+        return SURROUND51;
       case 8:
-        return SURROUND71 + shift;
+        return SURROUND71;
       case 12:
-        return SURROUND714 + shift;
+        return SURROUND714;
     }
     if (channels >= 12) {
-      return SURROUND714 + shift;
+      return SURROUND714;
     }
     if (channels >= 8) {
-      return SURROUND71 + shift;
+      return SURROUND71;
     }
     return STEREO;
   }
