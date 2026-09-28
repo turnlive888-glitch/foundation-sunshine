@@ -300,10 +300,10 @@ namespace audio {
     {
       SAMPLE_RATE,
       6,
-      6,
-      0,
+      4,
+      2,
       platf::speaker::map_surround51,
-      1536000,
+      256000,
     },
     {
       SAMPLE_RATE,
@@ -316,10 +316,10 @@ namespace audio {
     {
       SAMPLE_RATE,
       8,
-      8,
-      0,
+      5,
+      3,
       platf::speaker::map_surround71,
-      2048000,
+      450000,
     },
     {
       SAMPLE_RATE,
@@ -629,17 +629,17 @@ namespace audio {
       case 2:
         return STEREO + shift;
       case 6:
-        return SURROUND51;
+        return SURROUND51 + shift;
       case 8:
-        return SURROUND71;
+        return SURROUND71 + shift;
       case 12:
-        return SURROUND714;
+        return SURROUND714 + shift;
     }
     if (channels >= 12) {
-      return SURROUND714;
+      return SURROUND714 + shift;
     }
     if (channels >= 8) {
-      return SURROUND71;
+      return SURROUND71 + shift;
     }
     return STEREO;
   }
