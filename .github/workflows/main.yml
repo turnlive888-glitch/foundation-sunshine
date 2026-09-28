@@ -351,16 +351,19 @@ jobs:
         uses: actions/cache@v6
         with:
           path: C:\Program Files (x86)\Inno Setup 6
-          key: inno-setup-6
+          key: inno-setup-6.7.3
 
       - name: Install Inno Setup
         if: steps.inno-cache.outputs.cache-hit != 'true'
         shell: pwsh
         run: |
-          # Download and install Inno Setup 6 (silent install)
-          $url = "https://jrsoftware.org/download.php/is.exe"
+          # jrsoftware.org/download.php/is.exe now redirects to an HTML page;
+          # use the official GitHub release asset for Inno Setup 6 instead.
+          $url = "https://github.com/jrsoftware/issrc/releases/download/is-6_7_3/innosetup-6.7.3.exe"
           $installer = "$env:TEMP\innosetup.exe"
           Invoke-WebRequest -Uri $url -OutFile $installer
+          $size = (Get-Item $installer).Length
+          if ($size -lt 1000000) { throw "Inno Setup download too small ($size bytes) — likely not the real installer" }
           Start-Process -FilePath $installer -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-' -Wait
 
       - name: Add Inno Setup to PATH
