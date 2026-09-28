@@ -300,10 +300,10 @@ namespace audio {
     {
       SAMPLE_RATE,
       6,
-      4,
-      2,
+      6,
+      0,
       platf::speaker::map_surround51,
-      256000,
+      1536000,
     },
     {
       SAMPLE_RATE,
@@ -316,10 +316,10 @@ namespace audio {
     {
       SAMPLE_RATE,
       8,
-      5,
-      3,
+      8,
+      0,
       platf::speaker::map_surround71,
-      450000,
+      2048000,
     },
     {
       SAMPLE_RATE,
@@ -399,8 +399,13 @@ namespace audio {
     // DRED (Deep REDundancy): ML-based redundancy for graceful packet loss recovery
     // Works with CELT mode (RESTRICTED_LOWDELAY). Embeds redundancy in each packet
     // allowing the decoder to recover up to 100ms of lost audio from subsequent packets.
-    // opus_multistream_encoder_ctl(opus.get(), OPUS_SET_DRED_DURATION(100));
-    BOOST_LOG(info) << "Opus DRED disabled (Xbox UWP compatibility)"sv;
+    if (config::audio.dred) {
+      opus_multistream_encoder_ctl(opus.get(), OPUS_SET_DRED_DURATION(100));
+      BOOST_LOG(info) << "Opus DRED enabled: 100ms redundancy"sv;
+    }
+    else {
+      BOOST_LOG(info) << "Opus DRED disabled (config audio_dred=false)"sv;
+    }
 #endif
 
     BOOST_LOG(info) << "Opus initialized: "sv << stream.sampleRate / 1000 << " kHz, "sv
@@ -430,6 +435,19 @@ namespace audio {
   void encodeThread(sample_queue_t samples, config_t config, void *channel_data) {
     platf::adjust_thread_priority(platf::thread_priority_e::high);
     auto stream = stream_configs[map_stream(config.channels, config.flags[config_t::HIGH_QUALITY])];
+    if (!config::audio.high_surround_bitrate && config.flags[config_t::HIGH_QUALITY]) {
+      switch (stream.channelCount) {
+        case 6:
+          stream.bitrate = 256000;
+          break;
+        case 8:
+          stream.bitrate = 450000;
+          break;
+        case 12:
+          stream.bitrate = 600000;
+          break;
+      }
+    }
     if (config.codec == CODEC_OPUS && config.flags[config_t::CUSTOM_SURROUND_PARAMS]) {
       apply_surround_params(stream, config.customStreamParams);
     }
@@ -467,6 +485,19 @@ namespace audio {
       return;
     }
     auto stream = stream_configs[map_stream(config.channels, config.flags[config_t::HIGH_QUALITY])];
+    if (!config::audio.high_surround_bitrate && config.flags[config_t::HIGH_QUALITY]) {
+      switch (stream.channelCount) {
+        case 6:
+          stream.bitrate = 256000;
+          break;
+        case 8:
+          stream.bitrate = 450000;
+          break;
+        case 12:
+          stream.bitrate = 600000;
+          break;
+      }
+    }
     if (config.codec == CODEC_OPUS && config.flags[config_t::CUSTOM_SURROUND_PARAMS]) {
       apply_surround_params(stream, config.customStreamParams);
     }

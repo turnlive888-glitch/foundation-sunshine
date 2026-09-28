@@ -139,6 +139,8 @@ namespace config {
     bool stream;
     bool stream_mic;
     bool install_steam_drivers;
+    bool dred;  // default true
+    bool high_surround_bitrate;  // default true
   };
 
   constexpr int ENCRYPTION_MODE_NEVER = 0;  // Never use video encryption, even if the client supports it

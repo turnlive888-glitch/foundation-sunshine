@@ -517,6 +517,8 @@ namespace config {
     true,  // stream audio
     true,  // stream_mic (enable microphone streaming from client)
     true,  // install_steam_drivers
+    true,  // dred
+    true,  // high_surround_bitrate
   };
 
   stream_t stream {
@@ -1499,6 +1501,8 @@ namespace config {
     bool_f(vars, "stream_audio", audio.stream);
     bool_f(vars, "stream_mic", audio.stream_mic);
     bool_f(vars, "install_steam_audio_drivers", audio.install_steam_drivers);
+    bool_f(vars, "audio_dred", audio.dred);
+    bool_f(vars, "audio_high_surround_bitrate", audio.high_surround_bitrate);
 
     string_restricted_f(vars, "origin_web_ui_allowed", nvhttp.origin_web_ui_allowed, { "pc"sv, "lan"sv, "wan"sv });
 
